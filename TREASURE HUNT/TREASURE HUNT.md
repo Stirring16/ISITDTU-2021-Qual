@@ -187,7 +187,7 @@ print("Enc: " + c)
 
 #lalalalalalalalalalalalalalalalalalallalala
 ```
-Như comment trên đoạn code `Looks like the treasure key is cursed we need to know the SECRET to break this curse` ta còn thiếu 1 `SECRET` để lấy được key của đoạn python này
+Như comment trên đoạn code `Looks like the treasure key is cursed we need to know the SECRET to break this curse` ta còn thiếu  `SECRET` để lấy được key của đoạn python này
 
 Tiếp tục tìm tìm kiếm bằng `iehistory`
 
