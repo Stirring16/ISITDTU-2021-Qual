@@ -123,4 +123,6 @@ The End
 
 Nhìn lại format flag mà ta có ở trên: `7{7_2_10}`, tổng các kí tự là 26 trùng với số lượng cầu thủ
 
-Nhìn sơ ta có thể thấy ngay các kí tự cuối cùng của tên các cầu thủ khi join lại ta được flag: isitdtu{nothing_is_possible}
+Nhìn sơ ta có thể thấy ngay các kí tự cuối cùng của tên các cầu thủ khi join lại ta được flag
+
+> # isitdtu{nothing_is_possible}
