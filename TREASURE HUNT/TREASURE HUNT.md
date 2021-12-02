@@ -108,6 +108,10 @@ Name                                                  Pid   PPid   Thds   Hnds T
 
 Ở đây mình thấy được các tiến trình đáng nghi ở đây là: `cmd.exe`, `chrome.exe``notepad.exe`
 
+Khai thác từng tiến trình bằng cách plugin
+
+Đầu tiên mình check `cmdline`
+
 
 ```
 ┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure]
@@ -122,7 +126,8 @@ Command line : "C:\Windows\system32\NOTEPAD.EXE" C:\Users\Mon3tr\Desktop\P@55WOR
 ```
 
 
-Ta có 1 file `P@55WORD.py`, dùng filescan để tìm offset của file py
+Ta có 1 file `P@55WORD.py`, dùng `filescan` để tìm offset của file py
+
 ```
 ┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure]
 └─$ ../../Tools/volatility/Vol.py -f MON3TR-OP-20211122-082508.raw --profile=Win7SP1x64 filescan | grep py
@@ -131,7 +136,7 @@ Volatility Foundation Volatility Framework 2.6.1
 0x000000013ee7db70     16      0 R--rw- \Device\HarddiskVolume2\Users\Mon3tr\Desktop\P@55WORD.py
 
 ```
-Dùng dumpfiles để dump file này ra
+Dùng `dumpfiles` để dump file python ra
 
 ```
 ┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure]
@@ -141,10 +146,13 @@ Volatility Foundation Volatility Framework 2.6.1
 DataSectionObject 0x13ee7db70   None   \Device\HarddiskVolume2\Users\Mon3tr\Desktop\P@55WORD.py
                                                                                                 
 ```
+Đổi tên `mv file.None.0xfffffa8032b5a2b0.dat P@55WORD.py`
+
+Và code có gì
 ```
 
 ┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure/file]
-└─$ cat file.None.0xfffffa8032b5a2b0.dat 
+└─$ cat P@55WORD.py
 #Looks like the treasure key is cursed we need to know the SECRET to break this curse
 #1e19724f1e0605071f1c151a79556e4c7759654971486441765e6b253f2c3a467a34411f0f0c6c4b137e374e735465283c282c3443167135235704
 
@@ -181,7 +189,7 @@ print("Enc: " + c)
 ```
 Như comment trên đoạn code `Looks like the treasure key is cursed we need to know the SECRET to break this curse` ta còn thiếu 1 `SECRET` để lấy được key của đoạn python này
 
-Tiếp tục tìm tìm kiếm
+Tiếp tục tìm tìm kiếm bằng `iehistory`
 
 ```
 ┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure]
@@ -207,7 +215,7 @@ Last modified: 2021-11-21 23:59:09 UTC+0000
 Last accessed: 2021-11-22 08:08:54 UTC+0000
 File Offset: 0x100, Data Offset: 0x0, Data Length: 0x0
 ```
-Check history mình thấy được 1 file `S3cr3t.txt` và `1P.png`. Tiếp tục dùng filescan để kiếm 2 file này
+Check history mình thấy được 1 file `S3cr3t.txt` và `1P.png`. Tiếp tục dùng `filescan` để kiếm 2 file này
 
 ```
 ┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure]
@@ -275,16 +283,16 @@ for i in range(len(enc)-1):
 			print(byte,tmp,enc[i+1],hex(s[i]))
 			break
 	print(s)
-		
+# lttn
 ```
 Run code:
 
 ```
 ┌──(stirring㉿Stirring)-[/mnt/c/Users/thanh/Desktop]
-└─$ python3 solve.py 
+└─$ python3 lttn.py 
 b'\x13\tZ\x16\\\x1b\x01\x01\x15\x0f\x00\x00V\x08\x06\x08\x08\r\x05\x04\x08\x11\x15\x08\x04\x08\nZ\x01\x02\x0fR\x08QXS\x16\x04\\\x0eR[WR\x0c\x03\x08^\x0e\x07\x15\x07[]W[\x01QQ' 
 ```
-Ta có cipher đem xor với key `gaialimetaimeo`
+Ta có đoạn cipher, đem xor với key `gaialimetaimeo`
 
 ```
 ┌──(stirring㉿Stirring)-[/mnt/c/Users/thanh/Desktop]
@@ -300,16 +308,60 @@ Python 3.9.7 (default, Sep 24 2021, 09:43:00)
 'th3w0rldanim3g'
 ```
 
+# > Yeah, mình có được 1 piece of flag `KEYOFTREASURE: th3w0rldanim3`
 
+Tiếp tục kiểm tra `chromehistory`
 
+```
+┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure]
+└─$ ../../Tools/volatility/Vol.py --plugins /home/volatility3/plugins -f MON3TR-OP-20211122-082508.raw --profile=Win7SP1x64 chromehistory
+Volatility Foundation Volatility Framework 2.6.1
 
+4 https://www.google.com/search?q=how+to+...42LTEuOS0zmAEAoAEBsAEA&sclient=gws-wiz how to become god queboo - TÃ¬m trÃªn Google                                          2     0 2021-11-21 12:09:12.744067        N/A       
+124 https://www.youtube.com/watch?v=dM7x1PNZDo0                                      TVã‚¢ãƒ‹ãƒ¡ã€ŒONE PIECEã€1000è©±è¨˜å¿µï¼šã‚¦ã‚£ãƒ¼ã‚¢ãƒ¼ï¼ - YouTube                1     0 2021-11-22 02:23:16.718318        N/A       
+108 https://taimienphi.vn/download-winrar-11#showlink                                Táº£i WinRAR 32bit, 64bit, download pháº§n má»m nÃ©n, giáº£i nÃ©n file RAR, ZIP      2     0 2021-11-21 15:32:29.757186        N/A       
+107 https://taimienphi.vn/download-winrar-11                                         Táº£i WinRAR 32bit, 64bit, download pháº§n má»m nÃ©n, giáº£i nÃ©n file RAR, ZIP      3     0 2021-11-21 15:32:27.120964        N/A       
+105 https://pastebin.com/JAHLt4Tb                                                    MmcxZ0hubUFLNjlucEJjOU1MSzdweVVCTHZFMnN...nU4eUx4aXQxUG5ibkQ3blFU - Pastebin.com      3     0 2021-11-22 03:49:04.603755        N/A       
+104 https://pastebin.com/                                                            Pastebin.com - #1 paste tool since 2002!                                              1     0 2021-11-21 15:16:19.620023        N/A       
+63 https://www.google.com/search?q=kaido&e...WYAQCgAQGwAQrAAQE&sclient=gws-wiz-serp kaido - TÃ¬m trÃªn Google                                                             2     0 2021-11-21 15:10:11.062298        N/A       
+123 https://www.youtube.com/results?search_query=onepiece                            onepiece - YouTube                                                                    1     0 2021-11-22 02:23:13.442987        N/A       
+122 https://www.youtube.com/                                                         YouTube                                 
+```
 
+Check history chrome mình có được lịch sử truy cập pastebin có đường link: https://pastebin.com/JAHLt4Tb
 
+![image](https://user-images.githubusercontent.com/62060867/144486622-4f9bd6a6-25df-4e35-8f7a-c9e6b1e475ee.png)
 
+1 chuỗi encode base64, decode:
 
+```
+┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure]
+└─$ echo "MmcxZ0hubUFLNjlucEJjOU1MSzdweVVCTHZFMnNGcjlYTk55U3ZTNdWUxenZGWU41S2JOMQ==" | base64 --decode
+2g1gHnmAK69npBc9MLK7pyUBLvE2sFr9XNNySvS4HL2u8yLxit1PnbnD7nQT5Pt
+```
+Ta có tiếp 1 chuỗi encode base58
 
+```
+┌──(kali㉿kali)-[~/Desktop/ISITDTU/Treasure]
+└─$ echo "2g1gHnmAK69npBc9MLK7pyUBLvE2sFr9XNNySvS4HL2u8yLxit1PnbnD7nQT5PtgLUjPmedAZuRAkRvX1asK5NXUnSue1zvFYN5KbN1" | base58 --decode
+Look like you've found the treasure. It here: https://pastebin.com/pd8vYqPz
+```
+Yeah và mình đã tiềm thấy treasure
 
+![image](https://user-images.githubusercontent.com/62060867/144487029-030477bd-08cc-481c-8eae-11bb0cf45f23.png)
 
+Dùng key `th3w0rldanim3` để mở khóa 
+
+![image](https://user-images.githubusercontent.com/62060867/144487279-eef2fd89-fa24-45d8-8929-8508e07ef5c9.png)
+
+## > Ta có `NAMEOFTREASURE: O.P Treasure`
+
+## > Và ```ITEMINSIDETREASURE: ISITDTU{Y0u_Ar3_Th3_B35t_P1rat3}```
+
+# Ta có flag:
+## ```ISITDTU{md5(th3w0rldanim3_O.PTreasure_Y0u_Ar3_Th3_B35t_P1rat3)}```
+
+## `ISITDTU{53e5db52464003bae59cea69b0f67498}`
 
 
 
